@@ -1,12 +1,12 @@
 #/bin/bash
 
-SERVER_PATH=
-LOCAL_PATH=
+SERVER_PATH=lsync@sliton.ru:/storage0/home_vakhtang
+LOCAL_PATH=/home/vakhtang
 LOG_FILE='/var/tmp/ssync.log'
 EXCLUDE='.ssync/exclude.list'
 TIME_STATE_FILE='.ssync/time.state'
 SYNC_STATE_FILE='.ssync/sync.state'
-SSH_PORT=
+SSH_PORT=22
 
 if [ ! -f ${LOCAL_PATH}/${TIME_STATE_FILE} ]
 then
@@ -49,7 +49,6 @@ echo "progress" > ${LOCAL_PATH}/${SYNC_STATE_FILE}
 
 if [ ! -f ${LOCAL_PATH}/${TIME_STATE_FILE} ] || (( `cat ${LOCAL_PATH}/${TIME_STATE_FILE}` <= $local_state_version ))
 then
-
     echo $(date +%s) > ${LOCAL_PATH}/${TIME_STATE_FILE}    
     rsync -e "ssh -p ${SSH_PORT}" -au --relative --delete --log-file=${LOG_FILE} ${LOCAL_PATH}/./${SYNC_STATE_FILE} ${SERVER_PATH}/
 
@@ -58,7 +57,6 @@ then
     echo "done" > ${LOCAL_PATH}/${SYNC_STATE_FILE}
     rsync -e "ssh -p ${SSH_PORT}" -au --relative --delete --log-file=${LOG_FILE} ${LOCAL_PATH}/./${SYNC_STATE_FILE} ${SERVER_PATH}/
 else
-    echo 2
     rsync -e "ssh -p ${SSH_PORT}" -au --delete --exclude-from=${LOCAL_PATH}/${EXCLUDE} --log-file=${LOG_FILE} ${SERVER_PATH}/ ${LOCAL_PATH}
 fi
 
