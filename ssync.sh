@@ -1,12 +1,10 @@
 #/bin/bash
 
-SERVER_PATH=lsync@sliton.ru:/storage0/home_vakhtang
-LOCAL_PATH=/home/vakhtang
-LOG_FILE='/var/tmp/ssync.log'
-EXCLUDE='.ssync/exclude.list'
-TIME_STATE_FILE='.ssync/time.state'
-SYNC_STATE_FILE='.ssync/sync.state'
-SSH_PORT=22
+set -e
+
+SCRIPT_PATH=$(dirname "$0")
+
+. "${SCRIPT_PATH}"/ssync.conf
 
 if [ ! -f ${LOCAL_PATH}/${TIME_STATE_FILE} ]
 then
