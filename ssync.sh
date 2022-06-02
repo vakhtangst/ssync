@@ -4,7 +4,7 @@ set -e
 
 SCRIPT_PATH=$(dirname "$0")
 
-. "${SCRIPT_PATH}"/ssync.conf
+. "${SCRIPT_PATH}"/../.ssync/ssync.conf
 
 if [ ! -f ${LOCAL_PATH}/${TIME_STATE_FILE} ]
 then
@@ -47,6 +47,7 @@ echo "progress" > ${LOCAL_PATH}/${SYNC_STATE_FILE}
 
 if [ ! -f ${LOCAL_PATH}/${TIME_STATE_FILE} ] || (( `cat ${LOCAL_PATH}/${TIME_STATE_FILE}` <= $local_state_version ))
 then
+    echo "LOCAL =========> SERVER" | tee -a ${LOG_FILE}
     echo $(date +%s) > ${LOCAL_PATH}/${TIME_STATE_FILE}    
     rsync -e "ssh -p ${SSH_PORT}" -au --relative --delete --log-file=${LOG_FILE} ${LOCAL_PATH}/./${SYNC_STATE_FILE} ${SERVER_PATH}/
 
@@ -55,6 +56,7 @@ then
     echo "done" > ${LOCAL_PATH}/${SYNC_STATE_FILE}
     rsync -e "ssh -p ${SSH_PORT}" -au --relative --delete --log-file=${LOG_FILE} ${LOCAL_PATH}/./${SYNC_STATE_FILE} ${SERVER_PATH}/
 else
+    echo "SERVER =========> LOCAL" | tee -a ${LOG_FILE}
     rsync -e "ssh -p ${SSH_PORT}" -au --delete --exclude-from=${LOCAL_PATH}/${EXCLUDE} --log-file=${LOG_FILE} ${SERVER_PATH}/ ${LOCAL_PATH}
 fi
 
