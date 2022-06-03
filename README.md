@@ -16,5 +16,5 @@ Configure ssync.conf
 # CRONTAB
 
 ```
-* * * * * /usr/bin/flock /tmp/ssync.lock -c 'bash ~/ssync.sh'
+* * * * * /usr/bin/flock /tmp/ssync.lock -c 'bash ~/bin/ssync.sh'
 ```
