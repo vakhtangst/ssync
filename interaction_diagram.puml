@@ -1,0 +1,28 @@
+@startuml
+Client1 -> Server: Create lock file
+alt#Gold #LightBlue Lock file created    
+    alt#Gold #LightGreen If client timestamp > server timestamp
+        Client1 -> Server: Get timestamp
+        Client1 --> Server: SYNC from client1
+    else #Pink client timestamp < server timestamp
+        Server --> Client1: SYNC from client1
+    end
+    
+    Client2 -> Server: Create lock file
+    alt#Gold #LightBlue Lock file created
+
+    alt#Gold #LightGreen If client timestamp > server timestamp
+        
+        Client2 -> Server: Get time stamp
+        Client2 --> Server: SYNC from client1
+    else #LightGreen client timestamp < server timestamp
+        Server --> Client2: SYNC from client1
+    end
+
+    else #Pink Lock file is busy
+        Client2 -> Client2: Exit with code 0
+    end
+else #Pink Lock file is busy
+    Client1 -> Client1: Exit with code 0
+end
+@enduml
